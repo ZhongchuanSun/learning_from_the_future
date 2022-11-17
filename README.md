@@ -21,6 +21,7 @@ Experimental comparisons and ablation studies verify the outstanding performance
 ## Highlights
 
 - This paper points out that future information can be learned from users' collaborative behaviors.
+- We prove the necessity of future information for capturing users' dynamic interests from the information-theoretic perspective.
 - Sequential graphs are used to depict item transition relationships: where and how each item transits from and will transit to.
 - A Bidirectional Sequential Graph Convolutional Network (BiSGCN) is proposed to learn item representations by encoding past and future light cones.
 - A Manifold Translating Embedding (MTE) method is proposed to model item transition patterns in Riemannian manifolds.
