@@ -367,17 +367,11 @@ class BiSGCN(AbstractRecommender):
         self.train_opt = tf.train.AdamOptimizer(self.lr).minimize(final_loss)
 
     def train_model(self):
-        all_group_result = []
         self.logger.info(self.evaluator.metrics_info())
 
-        update_count = 0.0
         bets_result = 0.0
         stop_counter = 0
         best_str = ""
-        fetch_dir = os.path.split(os.path.dirname(self.config["train_file"]))[-1]
-        fetch_dir = os.path.join("embeds", fetch_dir)
-        if not os.path.exists(fetch_dir):
-            os.makedirs(fetch_dir)
 
         for epoch in range(self.global_step+1, self.epochs):
             for bat_users, bat_item_seq, bat_pos_next, bat_neg_next in self.sampler:
@@ -389,9 +383,7 @@ class BiSGCN(AbstractRecommender):
                                   self.neg_next_ph: np.reshape(bat_neg_next, newshape=[-1, self.n_next])
                                   })
                 self.sess.run(self.train_opt, feed_dict=feed_dict)
-                update_count += 1
 
-            all_group_result.append(self.evaluate_group())
             result = self.evaluate_model()
             self.logger.info("epoch %d:\t%s" % (epoch, result))
             stop_counter += 1
@@ -406,24 +398,10 @@ class BiSGCN(AbstractRecommender):
                 stop_counter = 0
 
         self.logger.info("best:\t%s" % best_str)
-        file_name = self.logger.logger.name
-        file_name = file_name.replace(".log", ".pkl")
-        with open(file_name, 'wb') as fout:
-            pickle.dump(all_group_result, fout)
 
     def evaluate_model(self):
         self.sess.run(self.assign_opt)
         return self.evaluator.evaluate(self)
-
-    def evaluate_group(self):
-        group_result = dict()
-        self.sess.run(self.assign_opt)
-        for seq_len, users in self.user_group.items():
-            result_str = self.evaluator.evaluate(self, users)
-            result = eval(result_str.replace('\t', ","))
-            result = np.float32(result)
-            group_result[(seq_len, len(users))] = result
-        return group_result
 
     def predict_for_eval(self, users):
         last_items = [self.test_item_seqs[u] for u in users]
