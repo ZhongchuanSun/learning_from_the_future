@@ -1,5 +1,8 @@
 # Learning from the Future: Light Cone Modeling for Sequential Recommendation
 
+This is our Tensorflow implementation for our paper:
+> Zhongchuan Sun, Bin Wu, Yifan Chen, and Yangdong Ye. Learning from the Future: Light Cone Modeling for Sequential Recommendation, IEEE Transactions on Cybernetics, Accept.
+
 <!-- Bidirectional Sequential Graph Convolutional Network (BiSGCN) -->
 
 Modeling sequential behaviors is the core of sequential recommendation.
